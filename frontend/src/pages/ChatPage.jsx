@@ -5,7 +5,11 @@ import io from "socket.io-client";
 import { useSelector } from "react-redux";
 import { TextField, Button, Typography } from "@mui/material";
 
-const socket = io("http://localhost:3000", { withCredentials: true });
+const socket = io(import.meta.env.VITE_BACKEND_URL, {
+    withCredentials: true,
+    transports: ["websocket", "polling"]
+});
+
 
 function ChatPage() {
     const friendId = useSelector((state) => state.mode.friendId);
@@ -22,7 +26,7 @@ function ChatPage() {
 
         const fetchChats = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/chat/showChats`, {
+                const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/chat/showChats`, {
                     params: { friendId, mode },
                     withCredentials: true,
                 });

@@ -35,7 +35,7 @@ function CreateRoom() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:3000/room/createRoom", form, {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/room/createRoom`, form, {
         withCredentials: true,
       });
       navigate("/group-room", { state: { roomId: res.data.roomId } });

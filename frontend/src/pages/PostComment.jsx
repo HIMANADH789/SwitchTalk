@@ -18,7 +18,7 @@ function PostComment() {
 
     const fetchPostComments = async () => {
         try {
-            const res = await axios.get("http://localhost:3000/post/getPostComments", {
+            const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/post/getPostComments`, {
                 params: { postId },
                 withCredentials: true,
             });
@@ -37,7 +37,7 @@ function PostComment() {
         if (!form.comment.trim()) return; // Prevent empty comments
 
         try {
-            await axios.post("http://localhost:3000/post/addPostComment", {
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/post/addPostComment`, {
                 ...form,
                 userId: user?._id, // Ensure user exists before using _id
                 postId,

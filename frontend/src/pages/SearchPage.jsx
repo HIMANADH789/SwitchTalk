@@ -9,7 +9,7 @@ function Search() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post("http://localhost:3000/auth/search", form, { withCredentials: true });
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/search`, form, { withCredentials: true });
             console.log(res.data);
             setSearchResult(prev => [...prev, res.data]);
         } catch {
@@ -25,10 +25,10 @@ function Search() {
         e.preventDefault();
         try {
             if (type === 'user') {
-                const res = await axios.post("http://localhost:3000/auth/followUser", { id }, { withCredentials: true });
+                const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/followUser`, { id }, { withCredentials: true });
                 console.log(res.data.user);
             } else {
-                const res = await axios.post("http://localhost:3000/auth/followGroup", { id }, { withCredentials: true });
+                const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/followGroup`, { id }, { withCredentials: true });
                 console.log(res.data);
             }
         } catch {

@@ -6,7 +6,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { setType } from "../redux/postSlice";
 import { TextField, Button, Typography } from "@mui/material";
 
-const socket = io("http://localhost:3000", { withCredentials: true });
+const socket = io(import.meta.env.VITE_BACKEND_URL, {
+    withCredentials: true,
+    transports: ["websocket", "polling"]
+});
+
 
 function GroupPage() {
     const dispatch = useDispatch();
@@ -25,7 +29,7 @@ function GroupPage() {
 
         const fetchGroupChats = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/group/messages`, {
+                const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/group/messages`, {
                     params: { groupId },
                     withCredentials: true
                 });

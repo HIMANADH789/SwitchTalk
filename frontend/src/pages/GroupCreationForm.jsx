@@ -23,7 +23,7 @@ function GroupCreationForm() {
     const submitForm = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post('http://localhost:3000/group/createGroup', form, { withCredentials: true });
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/group/createGroup`, form, { withCredentials: true });
 
             if (res.data.message === 'Successful Creation') {
                 navigate('/home');

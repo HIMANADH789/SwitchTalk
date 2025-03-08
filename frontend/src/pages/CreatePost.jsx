@@ -21,10 +21,10 @@ function CreatePost() {
         e.preventDefault();
         try {
             if (type === 'personal') {
-                await axios.post('http://localhost:3000/post/createPersonalPost', form, { withCredentials: true });
+                await axios.post(`${import.meta.env.VITE_BACKEND_URL}/post/createPersonalPost`, form, { withCredentials: true });
                 navigate('/home');
             } else {
-                await axios.post('http://localhost:3000/post/createGroupPost', { ...form, groupId, userId }, { withCredentials: true });
+                await axios.post(`${import.meta.env.VITE_BACKEND_URL}/post/createGroupPost`, { ...form, groupId, userId }, { withCredentials: true });
                 navigate('/group');
             }
         } catch (error) {

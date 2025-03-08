@@ -10,11 +10,11 @@ const rooms = new Map(); // Track room participants for WebRTC
 function setupWebSocket(server) {
     const io = new Server(server, {
         cors: {
-            origin: "http://localhost:5173",
+            origin: [process.env.FRONTEND_URL || "http://localhost:5173"],
             methods: ["GET", "POST"],
-            credentials: true  
+            credentials: true
         }
-    });
+    });    
 
     io.on("connection", (socket) => {
         console.log("New user connected:", socket.id);

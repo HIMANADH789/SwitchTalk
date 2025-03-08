@@ -7,7 +7,7 @@ function Notifications() {
 
     const fetchNotifications = async () => {
         try {
-            const response = await axios.get("http://localhost:3000/auth/notifications", {
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/notifications`, {
                 withCredentials: true,
             });
             setNotifications(response.data.notifications);
@@ -23,7 +23,7 @@ function Notifications() {
     const handleAccept = async (e, endpoint, payload) => {
         e.preventDefault();
         try {
-            await axios.post(`http://localhost:3000/auth/${endpoint}`, payload, {
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/${endpoint}`, payload, {
                 headers: { "Content-Type": "application/json" },
                 withCredentials: true,
             });

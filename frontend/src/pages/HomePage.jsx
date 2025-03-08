@@ -37,7 +37,7 @@ function Home() {
     const fetchPosts = async () => {
         try {
             const res = await axios.get(
-                `http://localhost:3000/post/getAllPosts?mode=${selectedMode}`,
+                `${import.meta.env.VITE_BACKEND_URL}/post/getAllPosts?mode=${selectedMode}`,
                 { withCredentials: true }
             );
             setPosts(res.data.posts);
@@ -52,7 +52,7 @@ function Home() {
 
     const handleLike = async (isLiked, postId) => {
         let toLike = !isLiked;
-        await axios.get("http://localhost:3000/post/changeLike", {
+        await axios.get(`${import.meta.env.VITE_BACKEND_URL}/post/changeLike`, {
             params: { toLike, postId },
             withCredentials: true
         });

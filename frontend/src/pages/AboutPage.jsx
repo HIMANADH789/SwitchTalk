@@ -13,7 +13,7 @@ function AboutPage() {
   useEffect(() => {
     async function fetchDetails() {
       try {
-        const res = await axios.get("http://localhost:3000/chat/about", {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/chat/about`, {
           params: { id },
           withCredentials: true,
         });

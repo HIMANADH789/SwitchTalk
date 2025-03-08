@@ -4,7 +4,7 @@ require('dotenv').config();
 const connectDB = async () => {
     if (mongoose.connection.readyState !== 0) {
         console.log('⚠️ MongoDB already connected.');
-        return; // Prevent duplicate connections
+        return; 
     }
 
     try {

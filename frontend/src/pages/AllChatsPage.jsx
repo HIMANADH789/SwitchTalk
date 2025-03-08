@@ -13,7 +13,7 @@ function AllChats() {
     useEffect(() => {
         const fetchAllChats = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/chat/allChats`, {
+                const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/chat/allChats`, {
                     params: { mode: selectedMode },
                     withCredentials: true,
                 });

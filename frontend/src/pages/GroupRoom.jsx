@@ -5,7 +5,11 @@ import io from "socket.io-client";
 import { Typography, TextField, Button } from "@mui/material";
 import { Send, Videocam, Mic, CallEnd } from "@mui/icons-material";
 
-const socket = io("http://localhost:3000", { withCredentials: true });
+const socket = io(import.meta.env.VITE_BACKEND_URL, {
+    withCredentials: true,
+    transports: ["websocket", "polling"]
+});
+
 
 const GroupRoom = () => {
     const location = useLocation();
@@ -25,7 +29,7 @@ const GroupRoom = () => {
 
         const fetchRoomData = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/room/getRoom`, {
+                const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/room/getRoom`, {
                     params: { roomId },
                     withCredentials: true,
                 });

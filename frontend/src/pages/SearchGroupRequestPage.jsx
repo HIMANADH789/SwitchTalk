@@ -13,7 +13,7 @@ function SearchGroupRequest() {
         e.preventDefault();
         try {
             const res = await axios.post(
-                "http://localhost:3000/auth/searchGroupRequest",
+                `${import.meta.env.VITE_BACKEND_URL}/auth/searchGroupRequest`,
                 { ...form, groupId },
                 { withCredentials: true }
             );
@@ -31,11 +31,11 @@ function SearchGroupRequest() {
         e.preventDefault();
         try {
             await axios.post(
-                "http://localhost:3000/auth/reqUserForFollowGroup",
+            `${import.meta.env.VITE_BACKEND_URL}/auth/reqUserForFollowGroup`,
                 { id, groupId },
                 { withCredentials: true }
             );
-            alert("Follow request sent! ✅");
+            alert("Follow request sent! ");
         } catch (error) {
             console.error("Error sending follow request:", error);
         }

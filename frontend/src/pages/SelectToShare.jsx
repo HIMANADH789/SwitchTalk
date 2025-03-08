@@ -17,7 +17,7 @@ const SelectToShare = () => {
     useEffect(() => {
         const fetchMates = async () => {
             try {
-                const res = await axios.get("http://localhost:3000/auth/getMates", {
+                const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/getMates`, {
                     params: { userId: user._id, mode: selectedMode },
                     withCredentials: true
                 });
@@ -44,7 +44,7 @@ const SelectToShare = () => {
         e.preventDefault();
         try {
             await axios.post(
-                "http://localhost:3000/auth/shareToMates",
+                `${import.meta.env.VITE_BACKEND_URL}/auth/shareToMates`,
                 { form, postId, chatId },
                 { withCredentials: true }
             );

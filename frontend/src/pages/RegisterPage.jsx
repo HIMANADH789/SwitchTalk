@@ -28,7 +28,7 @@ function Register() {
         setError(null);
 
         try {
-            const res = await axios.post("http://localhost:3000/auth/register", form, { withCredentials: true });
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/register`, form, { withCredentials: true });
 
             if (res.data.message === "Registration successful!") {
                 dispatch(setUser(res.data.user)); 
