@@ -3,6 +3,7 @@ const express = require('express');
 const passport = require('passport');
 const localStrategy = require('passport-local');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const http = require('http');
 const cors = require('cors');
 const connectDB = require('./database');
@@ -23,24 +24,28 @@ const allowedOrigins = [
 
 app.use(cors({
     origin: allowedOrigins,
-    credentials: true
+    credentials: true  // ✅ Allows cookies in cross-origin requests
 }));
 
 app.use(express.json());
 
-
+// ✅ Use MongoDB for session storage
 app.use(session({
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URI, // ✅ Your MongoDB connection URL
+        collectionName: 'sessions',  // Optional: Specify collection name
+        ttl: 24 * 60 * 60  // Sessions expire after 24 hours
+    }),
     secret: process.env.SESSION_SECRET || 'fallback-secret',
     resave: false,
     saveUninitialized: false,
     cookie: {
         maxAge: 1000 * 60 * 60 * 24, 
-        secure: process.env.NODE_ENV === "production", 
-        httpOnly: true,
+        secure: true,  // ✅ Required for HTTPS
+        httpOnly: true, 
         sameSite: "None"
     }
 }));
-
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -52,23 +57,18 @@ passport.deserializeUser(User.deserializeUser());
 connectDB();
 
 app.use((req, res, next) => {
-    
-    
     if (req.user) {
-        res.locals.user = req.user;  // Store user in res.locals
+        res.locals.user = req.user;
     }
-
     next();
 });
+
 app.use((req, res, next) => {
-    console.log("🔍 Incoming Request: ", req.method, req.url);
+    console.log("🔍 Incoming Request:", req.method, req.url);
     console.log("🔍 Session:", req.session);
     console.log("🔍 User:", req.user);
     next();
 });
-
-
-
 
 app.use('/auth', authRoutes);
 app.use('/chat', chatRoutes);
