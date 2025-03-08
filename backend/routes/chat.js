@@ -5,10 +5,10 @@ const {isLoggedIn}= require('../middlewares/auth.js');
 
 const router = express.Router();
 
-router.get('/allChats',chat.getChatsList);
+router.get('/allChats',isLoggedIn,chat.getChatsList);
 
-router.get('/showChats',chat.showChats);
+router.get('/showChats',isLoggedIn,chat.showChats);
 
-router.get('/about',chat.about);
+router.get('/about',isLoggedIn,chat.about);
 
 module.exports= router;

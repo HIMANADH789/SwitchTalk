@@ -6,7 +6,7 @@ const {isLoggedIn}= require('../middlewares/auth.js');
 const router= express.Router();
 
 
-router.post('/createRoom',room.createRoom);
+router.post('/createRoom',isLoggedIn,room.createRoom);
 
-router.get('/getRoom',room.getRoomMessages)
+router.get('/getRoom',isLoggedIn,room.getRoomMessages)
 module.exports=router;
