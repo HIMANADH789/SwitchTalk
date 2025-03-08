@@ -42,10 +42,12 @@ app.use(session({
     }),
     cookie: {
         maxAge: 1000 * 60 * 60 * 24, 
-        secure: false, 
-        httpOnly: true
+        secure: process.env.NODE_ENV === "production", 
+        httpOnly: true,
+        sameSite: "None"
     }
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new localStrategy(User.authenticate()));
@@ -61,6 +63,11 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use((req, res, next) => {
+    console.log("Session:", req.session);
+    console.log("User:", req.user);
+    next();
+});
 
 app.use('/auth',authRoutes);
 app.use('/chat',chatRoutes);
