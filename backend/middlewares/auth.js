@@ -8,7 +8,7 @@ const isLoggedIn = (req, res, next) => {
         return res.status(401).json({ message: "Unauthorized: User data missing" });
     }
 
-    res.locals.userId = req.user._id; // Attach userId to locals for templates
+    res.locals.user = req.user; // Attach userId to locals for templates
     next(); // Proceed to the next middleware
 };
 

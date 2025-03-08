@@ -45,29 +45,22 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.use(new localStrategy(User.authenticate()));
-passport.serializeUser((user, done) => {
-    console.log("🔹 Serializing User:", user._id);  // Debugging
-    done(null, user._id);
-});
-
-passport.deserializeUser(async (id, done) => {
-    try {
-        const user = await User.findById(id);
-        console.log("🔹 Deserializing User:", user);  // Debugging
-        done(null, user);
-    } catch (err) {
-        done(err);
-    }
-});
-
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 connectDB();
 
 app.use((req, res, next) => {
     console.log("Session:", req.session);
     console.log("User:", req.user);
+    
+    if (req.user) {
+        res.locals.user = req.user;  // Store user in res.locals
+    }
+
     next();
 });
+
 
 
 app.use('/auth', authRoutes);
