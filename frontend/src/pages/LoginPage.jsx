@@ -25,12 +25,10 @@ function Login() {
         e.preventDefault();
         try {
             const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, form, { withCredentials: true });
-            if (res.data.message === "Login successful!") {
+          
                 dispatch(setUser(res.data.user)); 
                 navigate("/home");
-            } else {
-                alert("Login failed");
-            }
+           
         } catch (err) {
             console.error(err);
         }
