@@ -2,9 +2,7 @@ const User= require('../schemas/user.js');
 const GroupChat= require('../schemas/groupChat.js');
 const Group= require('../schemas/group.js');
 const passport = require("passport");
-const mongoose= require('mongoose');
 const user = require('../schemas/user.js');
-mongoose.connect('mongodb://127.0.0.1:27017/chatApp');
 
 const createGroup= async(req,res,next)=>{
     const user= await User.findById(req.user._id);

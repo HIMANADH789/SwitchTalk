@@ -3,9 +3,7 @@ const Group= require('../schemas/group.js');
 const Post = require('../schemas/post.js');
 const Comment = require('../schemas/comment.js');
 const passport = require("passport");
-const mongoose= require('mongoose');
 const user = require('../schemas/user.js');
-mongoose.connect('mongodb://127.0.0.1:27017/chatApp');
 
 const createPersonalPost= async(req,res,next)=>{
     const user= await User.findById(req.user._id);

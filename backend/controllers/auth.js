@@ -4,9 +4,7 @@ const Group= require('../schemas/group.js');
 const PrivateChat= require('../schemas/privateChat.js');
 const GroupChat= require('../schemas/groupChat.js');
 const Notification= require('../schemas/notification.js');
-const mongoose= require('mongoose');
 const user = require('../schemas/user.js');
-mongoose.connect('mongodb://127.0.0.1:27017/chatApp');
 
 const userInfo= async(req,res,next)=>{
     if (req.user) {

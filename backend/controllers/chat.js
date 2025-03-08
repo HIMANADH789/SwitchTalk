@@ -3,8 +3,6 @@ const PrivateChat= require('../schemas/privateChat.js');
 const GroupChat= require('../schemas/groupChat.js');
 const Group= require('../schemas/group.js');
 const passport = require("passport");
-const mongoose= require('mongoose');
-mongoose.connect('mongodb://127.0.0.1:27017/chatApp');
 
 async function getChatList(userId, activeMode) {
     const user = await User.findById(userId).populate("groups followers following", "name profilePic mode");

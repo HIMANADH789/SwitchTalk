@@ -3,9 +3,7 @@ const Group= require('../schemas/group.js');
 const Room= require('../schemas/room.js');
 const Notification= require('../schemas/notification.js');
 const RoomMessage= require('../schemas/roomMessage.js');
-const passport = require("passport");
 const mongoose= require('mongoose');
-mongoose.connect('mongodb://127.0.0.1:27017/chatApp');
 
 const createRoom= async(req,res,next)=>{
     const {name,group,type,about,admin}= req.body;
