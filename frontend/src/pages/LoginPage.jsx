@@ -24,7 +24,12 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, form, { withCredentials: true });
+            const res = await axios.post(
+                `${import.meta.env.VITE_BACKEND_URL}/auth/login`, 
+                form, 
+                { withCredentials: true } 
+            );
+            
           
                 dispatch(setUser(res.data.user)); 
                 navigate("/home");

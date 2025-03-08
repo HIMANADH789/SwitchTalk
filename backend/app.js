@@ -23,13 +23,13 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-    origin: allowedOrigins,
-    credentials: true  // ✅ Allows cookies in cross-origin requests
+    origin: process.env.FRONTEND_URL, // ✅ Ensure correct frontend URL
+    credentials: true // ✅ Required for sending cookies
 }));
 
 app.use(express.json());
 
-// ✅ Use MongoDB for session storage
+
 app.use(session({
     store: MongoStore.create({
         mongoUrl: process.env.MONGO_URI, // ✅ Your MongoDB connection URL
