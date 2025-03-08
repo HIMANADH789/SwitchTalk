@@ -16,28 +16,28 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
 
 router.get("/user",auth.userInfo);
 
-router.post("/search",isLoggedIn,auth.search);
+router.post("/search",auth.search);
 
 router.get("/logout",auth.logoutUser);
 
-router.post("/followUser",isLoggedIn,auth.reqFriend);
+router.post("/followUser",auth.reqFriend);
 
-router.get("/notifications",isLoggedIn,auth.getNotifications);
+router.get("/notifications",auth.getNotifications);
 
-router.post("/acceptFriend",isLoggedIn,auth.acceptFriendRequest);
+router.post("/acceptFriend",auth.acceptFriendRequest);
 
-router.post("/reqUserForFollowGroup",isLoggedIn,auth.reqUserForFollowGroup);
+router.post("/reqUserForFollowGroup",auth.reqUserForFollowGroup);
 
-router.post("/acceptGroup",isLoggedIn,auth.acceptGroupRequest);
+router.post("/acceptGroup",auth.acceptGroupRequest);
 
-router.post("/searchGroupRequest",isLoggedIn,auth.searchGroupRequest);
+router.post("/searchGroupRequest",auth.searchGroupRequest);
 
-router.post("/followGroup",isLoggedIn,auth.reqGroup);
+router.post("/followGroup",auth.reqGroup);
 
-router.post("/acceptGroupFollow",isLoggedIn,auth.acceptGroupFollow);
+router.post("/acceptGroupFollow",auth.acceptGroupFollow);
 
-router.get('/getMates',isLoggedIn,auth.getMates);
+router.get('/getMates',auth.getMates);
 
-router.post('/shareToMates',isLoggedIn,auth.shareToMates);
+router.post('/shareToMates',auth.shareToMates);
 
 module.exports= router;

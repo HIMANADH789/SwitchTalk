@@ -5,15 +5,15 @@ const {isLoggedIn}= require('../middlewares/auth.js');
 
 const router= express.Router();
 
-router.post('/createPersonalPost',isLoggedIn,post.createPersonalPost);
+router.post('/createPersonalPost',post.createPersonalPost);
 
-router.post('/createGroupPost',isLoggedIn,post.createGroupPost);
+router.post('/createGroupPost',post.createGroupPost);
 
-router.get('/getAllPosts',isLoggedIn,post.getUsersFeed);
+router.get('/getAllPosts',post.getUsersFeed);
 
-router.get('/getPostComments',isLoggedIn,post.getPostComments);
+router.get('/getPostComments',post.getPostComments);
 
-router.post('/addPostComment',isLoggedIn,post.addPostComment);
+router.post('/addPostComment',post.addPostComment);
 
 router.get('/changeLike',post.changeLike);
 

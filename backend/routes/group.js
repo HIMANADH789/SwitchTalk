@@ -5,8 +5,8 @@ const {isLoggedIn}= require('../middlewares/auth.js');
 
 const router = express.Router();
 
-router.post('/createGroup',isLoggedIn,group.createGroup)
+router.post('/createGroup',group.createGroup)
 
-router.get('/messages',isLoggedIn,group.getGroupMessages)
+router.get('/messages',group.getGroupMessages)
 
 module.exports= router;
