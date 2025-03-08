@@ -41,6 +41,7 @@ app.use(session({
     }
 }));
 
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -51,8 +52,7 @@ passport.deserializeUser(User.deserializeUser());
 connectDB();
 
 app.use((req, res, next) => {
-    console.log("Session:", req.session);
-    console.log("User:", req.user);
+    
     
     if (req.user) {
         res.locals.user = req.user;  // Store user in res.locals
@@ -60,6 +60,13 @@ app.use((req, res, next) => {
 
     next();
 });
+app.use((req, res, next) => {
+    console.log("🔍 Incoming Request: ", req.method, req.url);
+    console.log("🔍 Session:", req.session);
+    console.log("🔍 User:", req.user);
+    next();
+});
+
 
 
 

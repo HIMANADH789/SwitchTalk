@@ -7,9 +7,12 @@ const router = express.Router();
 
 router.post("/register",auth.registerUser);
 
-router.post("/login", passport.authenticate("local"), (req, res) => {
-    res.json({ message: "Login successful!", user: req.user });
+router.post('/login', passport.authenticate('local'), (req, res) => {
+    console.log("✅ Login Successful - User:", req.user);
+    console.log("✅ Session After Login:", req.session);
+    res.json({ message: "Login successful", user: req.user });
 });
+
 
 router.get("/user",auth.userInfo);
 
