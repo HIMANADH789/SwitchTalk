@@ -64,11 +64,12 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-    console.log("🔍 Incoming Request:", req.method, req.url);
     console.log("🔍 Session:", req.session);
+    console.log("🔍 Passport Data:", req.session.passport);
     console.log("🔍 User:", req.user);
     next();
-});
+  });
+  
 
 app.use('/auth', authRoutes);
 app.use('/chat', chatRoutes);
