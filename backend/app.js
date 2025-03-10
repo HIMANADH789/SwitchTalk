@@ -28,8 +28,8 @@ app.use(cors({
 
 app.use(express.json());
 
-// ✅ MongoStore: Ensure proper session storage
-const sessionStore = MongoStore.create({
+// ✅ Session Store using MongoDB
+const sessionStore = new MongoStore({
     mongoUrl: process.env.MONGO_URI,
     collectionName: 'sessions',
     ttl: 24 * 60 * 60 // Sessions expire after 24 hours
@@ -52,11 +52,11 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// ✅ Local Strategy Setup
+// ✅ Passport Local Strategy
 passport.use(new LocalStrategy(User.authenticate()));
 
 passport.serializeUser((user, done) => {
-    done(null, user.id);
+    done(null, user._id); // Store user ID in session
 });
 
 passport.deserializeUser(async (id, done) => {
@@ -68,15 +68,10 @@ passport.deserializeUser(async (id, done) => {
     }
 });
 
-// ✅ Middleware to Manually Set req.user from Session
-app.use(async (req, res, next) => {
-    if (!req.user && req.session.passport && req.session.passport.user) {
-        try {
-            req.user = await User.findById(req.session.passport.user);
-            console.log("✅ Manually set req.user:", req.user);
-        } catch (err) {
-            console.error("❌ Error fetching user from session:", err);
-        }
+// ✅ Middleware to Verify Session
+app.use((req, res, next) => {
+    if (req.session && req.session.passport && req.session.passport.user) {
+        req.user = req.session.passport.user;
     }
     next();
 });
