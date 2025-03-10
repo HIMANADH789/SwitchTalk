@@ -33,8 +33,6 @@ MongoStore.create({
     mongoUrl: process.env.MONGO_URI,
     collectionName: 'sessions',
 })
-.then(store => console.log("✅ MongoStore initialized"))
-.catch(err => console.error("❌ MongoStore error:", err));
 
 
 app.use(session({
