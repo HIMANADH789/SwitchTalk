@@ -44,7 +44,7 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24,
         secure: process.env.NODE_ENV === "production",
         httpOnly: true,
-        sameSite: "None"
+        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax"
     }
 }));
 
@@ -56,43 +56,54 @@ app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 
 passport.serializeUser((user, done) => {
+    console.log("🔒 Serializing user:", user._id);
     done(null, user._id); // Store user ID in session
 });
 
 passport.deserializeUser(async (id, done) => {
     try {
+        console.log("🔄 Deserializing user with ID:", id);
         const user = await User.findById(id);
+        console.log("🔄 Found user:", user ? "Yes" : "No");
+        if (!user) return done(null, false);
         done(null, user);
     } catch (err) {
+        console.error("❌ Deserialization error:", err);
         done(err);
     }
 });
 
-// ✅ Middleware to Verify Session
-app.use((req, res, next) => {
-    if (req.session && req.session.passport && req.session.passport.user) {
-        req.user = req.session.passport.user;
+// ✅ Authentication check middleware
+function isAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
     }
-    next();
-});
+    return res.status(401).json({ message: "Not authenticated" });
+}
 
 // ✅ Debugging Middleware
 app.use((req, res, next) => {
-    console.log("🔍 Session:", req.session);
-    console.log("🔍 Passport Data:", req.session.passport);
-    console.log("🔍 User:", req.user);
+    console.log("🔍 Session ID:", req.sessionID);
+    console.log("🔍 Is Authenticated:", req.isAuthenticated());
+    console.log("🔍 User:", req.user ? `ID: ${req.user._id}, Username: ${req.user.username}` : "Not logged in");
     next();
 });
 
-// ✅ Routes
+// ✅ Routes with authentication middleware where needed
 app.use('/auth', authRoutes);
-app.use('/chat', chatRoutes);
-app.use('/group', groupRoutes);
-app.use('/post', postRoutes);
-app.use('/room', roomRoutes);
+app.use('/chat', isAuthenticated, chatRoutes);
+app.use('/group', isAuthenticated, groupRoutes);
+app.use('/post', isAuthenticated, postRoutes);
+app.use('/room', isAuthenticated, roomRoutes);
 
 // ✅ WebSocket Setup
 setupWebSocket(server);
+
+// ✅ Error handling middleware
+app.use((err, req, res, next) => {
+    console.error("❌ Server Error:", err);
+    res.status(500).json({ message: "Internal server error", error: process.env.NODE_ENV === "development" ? err.message : undefined });
+});
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
