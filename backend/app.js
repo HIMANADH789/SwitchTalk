@@ -29,6 +29,13 @@ app.use(cors({
 
 app.use(express.json());
 
+MongoStore.create({
+    mongoUrl: process.env.MONGO_URI,
+    collectionName: 'sessions',
+})
+.then(store => console.log("✅ MongoStore initialized"))
+.catch(err => console.error("❌ MongoStore error:", err));
+
 
 app.use(session({
     store: MongoStore.create({
@@ -40,9 +47,9 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 1000 * 60 * 60 * 24, 
-        secure: true,  // ✅ Required for HTTPS
-        httpOnly: true, 
+        maxAge: 1000 * 60 * 60 * 24,
+        secure: process.env.NODE_ENV === "production",  // ✅ Secure only in production
+        httpOnly: true,
         sameSite: "None"
     }
 }));
