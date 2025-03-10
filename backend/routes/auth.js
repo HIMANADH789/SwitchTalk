@@ -7,20 +7,11 @@ const router = express.Router();
 
 router.post("/register",auth.registerUser);
 
-// This should be in your auth.js routes file or equivalent
-router.post('/login', (req, res, next) => {
-    passport.authenticate('local', (err, user, info) => {
-        if (err) return next(err);
-        if (!user) return res.status(401).json({ message: info.message || 'Authentication failed' });
-        
-        req.login(user, (err) => {
-            if (err) return next(err);
-            console.log("✅ Login successful, user:", user.username);
-            console.log("✅ Session:", req.session);
-            return res.json({ user: { id: user._id, username: user.username } });
-        });
-    })(req, res, next);
+router.post("/login", passport.authenticate("local"), (req, res) => {
+    res.json({ message: "Login successful!", user: req.user });
+    console.log(req.user);
 });
+
 router.get("/user",auth.userInfo);
 
 router.post("/search",isLoggedIn,auth.search);
