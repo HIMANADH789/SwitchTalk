@@ -36,7 +36,7 @@ app.use(session({
         collectionName: 'sessions',  // Optional: Specify collection name
         ttl: 24 * 60 * 60  // Sessions expire after 24 hours
     }),
-    secret: process.env.SESSION_SECRET || 'fallback-secret',
+    secret: 'fallback-secret',
     resave: false,
     saveUninitialized: false,
     cookie: {
