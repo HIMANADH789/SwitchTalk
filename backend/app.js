@@ -35,18 +35,22 @@ const sessionStore = new MongoStore({
     ttl: 24 * 60 * 60 // Sessions expire after 24 hours
 });
 
+// Update your session configuration
 app.use(session({
     store: sessionStore,
     secret: process.env.SESSION_SECRET || 'fallback-secret',
-    resave: false,
+    resave: true,  // Changed to true to ensure session is saved
     saveUninitialized: false,
     cookie: {
         maxAge: 1000 * 60 * 60 * 24,
-        secure: process.env.NODE_ENV === "production",
+        secure: false,  // Set to false during development
         httpOnly: true,
-        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax"
+        sameSite: "Lax"  // Changed to Lax for development
     }
 }));
+
+// Add more detailed logging to passport serialization/deserialization
+
 
 // ✅ Initialize Passport Middleware
 app.use(passport.initialize());
@@ -57,19 +61,18 @@ passport.use(new LocalStrategy(User.authenticate()));
 
 passport.serializeUser((user, done) => {
     console.log("🔒 Serializing user:", user._id);
-    done(null, user._id); // Store user ID in session
+    done(null, user._id.toString()); // Convert ObjectId to string
 });
 
 passport.deserializeUser(async (id, done) => {
     try {
         console.log("🔄 Deserializing user with ID:", id);
         const user = await User.findById(id);
-        console.log("🔄 Found user:", user ? "Yes" : "No");
-        if (!user) return done(null, false);
+        console.log("🔄 Found user:", user ? user.username : "No user found");
         done(null, user);
     } catch (err) {
         console.error("❌ Deserialization error:", err);
-        done(err);
+        done(err, null);
     }
 });
 
