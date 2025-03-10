@@ -56,8 +56,21 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.use(new localStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+
+// ✅ Corrected serialization & deserialization
+passport.serializeUser((user, done) => {
+    done(null, user.id);  // Save user ID in session
+});
+
+passport.deserializeUser(async (id, done) => {
+    try {
+        const user = await User.findById(id);
+        done(null, user);
+    } catch (err) {
+        done(err);
+    }
+});
+
 
 connectDB();
 
