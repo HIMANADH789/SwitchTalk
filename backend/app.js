@@ -18,7 +18,7 @@ const { setupWebSocket } = require('./utils/websocket');
 const app = express();
 const server = http.createServer(app);
 
-connectDB(); // Ensure database connection is established before anything else
+connectDB();
 
 // ✅ CORS Configuration (Frontend should send credentials)
 app.use(cors({
@@ -56,19 +56,29 @@ app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 
 passport.serializeUser((user, done) => {
-    console.log("✅ Serializing User:", user.id);
     done(null, user.id);
 });
 
 passport.deserializeUser(async (id, done) => {
     try {
         const user = await User.findById(id);
-        console.log("✅ Deserializing User:", user);
         done(null, user);
     } catch (err) {
-        console.error("❌ Error deserializing user:", err);
         done(err);
     }
+});
+
+// ✅ Middleware to Manually Set req.user from Session
+app.use(async (req, res, next) => {
+    if (!req.user && req.session.passport && req.session.passport.user) {
+        try {
+            req.user = await User.findById(req.session.passport.user);
+            console.log("✅ Manually set req.user:", req.user);
+        } catch (err) {
+            console.error("❌ Error fetching user from session:", err);
+        }
+    }
+    next();
 });
 
 // ✅ Debugging Middleware
