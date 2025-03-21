@@ -30,12 +30,10 @@ function Login() {
                 { withCredentials: true } 
             );
             
-          
-                dispatch(setUser(res.data.user)); 
-                navigate("/home");
-           
+            dispatch(setUser(res.data.user)); 
+            navigate("/home");
         } catch (err) {
-            console.error(err);
+            // Handle error
         }
     };
 
