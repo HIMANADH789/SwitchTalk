@@ -20,95 +20,81 @@ const server = http.createServer(app);
 
 connectDB();
 
-// ✅ CORS Configuration (Frontend should send credentials)
+const isProduction = process.env.NODE_ENV === 'production';
+const CLIENT_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
+    origin: CLIENT_URL,
     credentials: true
 }));
 
 app.use(express.json());
 
-// ✅ Session Store using MongoDB
-const sessionStore = new MongoStore({
+const sessionStore = MongoStore.create({
     mongoUrl: process.env.MONGO_URI,
     collectionName: 'sessions',
-    ttl: 24 * 60 * 60 // Sessions expire after 24 hours
+    ttl: 24 * 60 * 60,
 });
 
-// Update your session configuration
 app.use(session({
     store: sessionStore,
     secret: process.env.SESSION_SECRET || 'fallback-secret',
-    resave: true,  // Changed to true to ensure session is saved
+    resave: false,
     saveUninitialized: false,
     cookie: {
         maxAge: 1000 * 60 * 60 * 24,
-        secure: false,  // Set to false during development
+        secure: isProduction, // Secure in production (HTTPS)
         httpOnly: true,
-        sameSite: "Lax"  // Changed to Lax for development
+        sameSite: 'Lax'
     }
 }));
 
-// Add more detailed logging to passport serialization/deserialization
-
-
-// ✅ Initialize Passport Middleware
 app.use(passport.initialize());
 app.use(passport.session());
 
-// ✅ Passport Local Strategy
 passport.use(new LocalStrategy(User.authenticate()));
-
-passport.serializeUser((user, done) => {
-    console.log("🔒 Serializing user:", user._id);
-    done(null, user._id.toString()); // Convert ObjectId to string
-});
-
+passport.serializeUser((user, done) => done(null, user._id.toString()));
 passport.deserializeUser(async (id, done) => {
     try {
-        console.log("🔄 Deserializing user with ID:", id);
         const user = await User.findById(id);
-        console.log("🔄 Found user:", user ? user.username : "No user found");
         done(null, user);
     } catch (err) {
-        console.error("❌ Deserialization error:", err);
         done(err, null);
     }
 });
 
-// ✅ Authentication check middleware
 function isAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    }
-    return res.status(401).json({ message: "Not authenticated" });
+    return req.isAuthenticated() ? next() : res.status(401).json({ message: "Not authenticated" });
 }
 
-// ✅ Debugging Middleware
-app.use((req, res, next) => {
-    console.log("🔍 Session ID:", req.sessionID);
-    console.log("🔍 Is Authenticated:", req.isAuthenticated());
-    console.log("🔍 User:", req.user ? `ID: ${req.user._id}, Username: ${req.user.username}` : "Not logged in");
-    next();
-});
-
-// ✅ Routes with authentication middleware where needed
 app.use('/auth', authRoutes);
 app.use('/chat', isAuthenticated, chatRoutes);
 app.use('/group', isAuthenticated, groupRoutes);
 app.use('/post', isAuthenticated, postRoutes);
 app.use('/room', isAuthenticated, roomRoutes);
 
-// ✅ WebSocket Setup
 setupWebSocket(server);
 
-// ✅ Error handling middleware
+if (isProduction) {
+    app.use(express.static('public')); // Serve static files if available
+}
+
 app.use((err, req, res, next) => {
-    console.error("❌ Server Error:", err);
-    res.status(500).json({ message: "Internal server error", error: process.env.NODE_ENV === "development" ? err.message : undefined });
+    res.status(500).json({
+        message: "Internal server error",
+        error: !isProduction ? err.message : undefined
+    });
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-    console.log(`✅ Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
+});
+
+process.on('SIGTERM', () => {
+    console.log('Shutting down gracefully...');
+    server.close(() => {
+        console.log('Server closed');
+        process.exit(0);
+    });
 });

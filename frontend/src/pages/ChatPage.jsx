@@ -99,8 +99,6 @@ function ChatPage() {
                     {friend ? friend.name : "Loading..."}
                 </Typography>
             </div>
-
-            {/* Chat Messages */}
             <div style={{
                 flex: 1,
                 overflowY: "auto",

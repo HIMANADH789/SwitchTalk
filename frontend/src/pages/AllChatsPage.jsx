@@ -27,12 +27,12 @@ function AllChats() {
     }, [selectedMode]);
 
     return (
-        <Box sx={{ width: 700, margin: "auto", mt: 4 }}> {/* Increased width */}
+        <Box sx={{ width: 700, margin: "auto", mt: 4 }}> 
             <Typography variant="h5" gutterBottom align="center">
                 Chats
             </Typography>
             
-            <Paper sx={{ borderRadius: 3, boxShadow: 3, p: 1 }}> {/* Added padding */}
+            <Paper sx={{ borderRadius: 3, boxShadow: 3, p: 1 }}> 
                 <List>
                     {allChats.map((ch, index) => (
                         <div key={ch._id}>
@@ -63,7 +63,7 @@ function AllChats() {
         />
     </ListItemAvatar>
     
-    {/* Wrap inside Box to add padding */}
+   
     <Box sx={{ pl: "50px", width: "100%" }}> 
         <ListItemText 
             primary={ch.name} 
@@ -74,7 +74,7 @@ function AllChats() {
     </Box>
 </ListItem>
 
-                            {index !== allChats.length - 1 && <Divider />} {/* Add divider between items */}
+                            {index !== allChats.length - 1 && <Divider />}
                         </div>
                     ))}
                 </List>

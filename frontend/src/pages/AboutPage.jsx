@@ -24,10 +24,10 @@ function AboutPage() {
       }
     }
     fetchDetails();
-  }, [id]); // Add id as a dependency
+  }, [id]);
 
   if (!details) {
-    return <h2>Loading...</h2>; // Prevents undefined errors before fetching
+    return <h2>Loading...</h2>; 
   }
 
   return (
