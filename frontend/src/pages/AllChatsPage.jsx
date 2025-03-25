@@ -10,6 +10,8 @@ function AllChats() {
     const selectedMode = useSelector((state) => state.mode.selectedMode);
     const { user } = useSelector((state) => state.user);
     const [allChats, setAllChats] = useState([]);
+    console.log("User from Redux:", user);
+
 
     useEffect(() => {
         const fetchAllChats = async () => {
