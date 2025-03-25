@@ -30,7 +30,7 @@ function AllChats() {
     return (
         <Box sx={{ width: 700, margin: "auto", mt: 4 }}> 
             <Typography variant="h5" gutterBottom align="center">
-                Chats {user?.name}
+                Chats {user?.name}{"abc"}
             </Typography>
             
             <Paper sx={{ borderRadius: 3, boxShadow: 3, p: 1 }}> 
