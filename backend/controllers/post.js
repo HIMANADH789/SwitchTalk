@@ -26,7 +26,7 @@ const createGroupPost= async(req,res,next)=>{
 }
 
 const getUsersFeed = async (req, res, next) => {
-    console.info("🔍 Checking User in Session:", req.user);
+    console.info(" Checking User in Session:", req.user);
     const { mode } = req.query;
 
     const user = await User.findById(req.user._id)

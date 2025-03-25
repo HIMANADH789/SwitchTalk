@@ -8,6 +8,7 @@ import { Box, Typography, List, ListItem, Avatar, Paper, ListItemAvatar, ListIte
 function AllChats() {
     const dispatch = useDispatch();
     const selectedMode = useSelector((state) => state.mode.selectedMode);
+    const { user } = useSelector((state) => state.user);
     const [allChats, setAllChats] = useState([]);
 
     useEffect(() => {
@@ -29,7 +30,7 @@ function AllChats() {
     return (
         <Box sx={{ width: 700, margin: "auto", mt: 4 }}> 
             <Typography variant="h5" gutterBottom align="center">
-                Chats
+                Chats {user?.name}
             </Typography>
             
             <Paper sx={{ borderRadius: 3, boxShadow: 3, p: 1 }}> 

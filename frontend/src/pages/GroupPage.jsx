@@ -17,7 +17,7 @@ function GroupPage() {
     const groupId = useSelector((state) => state.mode.groupId);
     console.log(groupId);
     const mode = useSelector((state) => state.mode.selectedMode);
-
+    
     const [messages, setMessages] = useState([]);
     const [group, setGroup] = useState(null);
     const [user, setUser] = useState(null);

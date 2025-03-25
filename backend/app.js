@@ -76,7 +76,7 @@ app.use('/room', isAuthenticated, roomRoutes);
 setupWebSocket(server);
 
 if (isProduction) {
-    app.use(express.static('public')); // Serve static files if available
+    app.use(express.static('public')); 
 }
 
 app.use((err, req, res, next) => {
