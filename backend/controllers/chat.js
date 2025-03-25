@@ -42,7 +42,7 @@ const getChatsList = async (req, res, next) => {
         const chatList = await getChatList(user._id, mode);
         const test = [...user.following, ...user.followers, ...user.groups];
 
-        
+        console.log("Hitted",user);
         res.json({ chatList, test });
     
 };
