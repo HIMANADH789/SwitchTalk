@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
+
+const db="mongodb+srv://himanadhkondabathini:Himanadh1234@cluster0.y77ij.mongodb.net/"
 const connectDB = async () => {
     if (mongoose.connection.readyState !== 0) {
         console.log('⚠️ MongoDB already connected.');
@@ -8,7 +10,7 @@ const connectDB = async () => {
     }
 
     try {
-        await mongoose.connect(process.env.MONGO_URI); // 🔥 Remove deprecated options
+        await mongoose.connect(db); // 🔥 Remove deprecated options
         console.log('✅ MongoDB Atlas Connected...');
     } catch (err) {
         console.error('❌ MongoDB Connection Error:', err);
