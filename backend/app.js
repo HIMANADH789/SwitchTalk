@@ -27,9 +27,9 @@ app.use(cors());
 
 app.use(express.json());
 
-
+const db= "mongodb+srv://himanadhkondabathini:Himanadh%401234@cluster0.y77ij.mongodb.net/"
 const sessionStore = MongoStore.create({
-    mongoUrl: process.env.db,
+    mongoUrl: db,
     collectionName: 'sessions',
     ttl: 24 * 60 * 60,
 });
