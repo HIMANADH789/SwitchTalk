@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 
-const db="mongodb+srv://himanadhkondabathini:Himanadh1234@cluster0.y77ij.mongodb.net/"
+const db="mongodb+srv://himanadhkondabathini:Himanadh%401234@cluster0.y77ij.mongodb.net/chat?retryWrites=true&w=majority&appName=Cluster0"
 const connectDB = async () => {
     if (mongoose.connection.readyState !== 0) {
         console.log('⚠️ MongoDB already connected.');
@@ -17,5 +17,6 @@ const connectDB = async () => {
         process.exit(1);
     }
 };
+
 
 module.exports = connectDB;
