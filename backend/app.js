@@ -23,11 +23,27 @@ connectDB();
 
 const CLIENT_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
-app.use(cors());
+const allowedOrigins = [
+  'https://switch-talk.vercel.app',
+  'http://localhost:5173'
+];
+
+// Allow dynamic Vercel preview URLs
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true
+}));
+
 
 app.use(express.json());
 
-const db= "mongodb+srv://himanadhkondabathini:Himanadh%401234@cluster0.y77ij.mongodb.net/"
+const db= "mongodb+srv://himanadhkondabathini:Himanadh%401234@cluster0.y77ij.mongodb.net/chat?retryWrites=true&w=majority&appName=Cluster0"
 const sessionStore = MongoStore.create({
     mongoUrl: db,
     collectionName: 'sessions',
