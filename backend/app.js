@@ -20,30 +20,27 @@ const server = http.createServer(app);
 
 connectDB();
 
-const isProduction = process.env.NODE_ENV === 'production';
+
 const CLIENT_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
-app.use(cors({
-    origin: process.env.FRONTEND_URL,
-    credentials: true
-}));
+app.use(cors());
 
 app.use(express.json());
 
+
 const sessionStore = MongoStore.create({
-    mongoUrl: process.env.MONGO_URI,
+    mongoUrl: process.env.db,
     collectionName: 'sessions',
     ttl: 24 * 60 * 60,
 });
 
 app.use(session({
     store: sessionStore,
-    secret: process.env.SESSION_SECRET || 'fallback-secret',
+    secret: 'fallback-secret',
     resave: false,
     saveUninitialized: false,
     cookie: {
         maxAge: 1000 * 60 * 60 * 24,
-        secure: isProduction, // Secure in production (HTTPS)
         httpOnly: true,
         sameSite: 'Lax'
     }
@@ -75,9 +72,7 @@ app.use('/room', isAuthenticated, roomRoutes);
 
 setupWebSocket(server);
 
-if (isProduction) {
-    app.use(express.static('public')); 
-}
+    
 
 app.use((err, req, res, next) => {
     res.status(500).json({
