@@ -10,6 +10,7 @@ router.post("/register",auth.registerUser);
 router.post("/login", passport.authenticate("local"), (req, res) => {
     res.json({ message: "Login successful!", user: req.user });
     console.log(req.user);
+    console.log("SESSION SAVED:", req.session);
 });
 
 router.get("/user",auth.userInfo);
