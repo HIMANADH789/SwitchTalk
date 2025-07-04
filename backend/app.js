@@ -16,6 +16,8 @@ const postRoutes = require('./routes/post.js');
 const { setupWebSocket } = require('./utils/websocket');
 
 const app = express();
+app.set('trust proxy', 1);
+
 const server = http.createServer(app);
 
 connectDB();
