@@ -13,6 +13,15 @@ router.post("/login", passport.authenticate("local"), (req, res) => {
     console.log("SESSION SAVED:", req.session);
 });
 
+app.get("/debug", (req, res) => {
+  res.json({
+    isAuthenticated: req.isAuthenticated?.() || false,
+    user: req.user || null,
+    session: req.session || null
+  });
+});
+
+
 router.get("/user",auth.userInfo);
 
 router.post("/search",isLoggedIn,auth.search);

@@ -29,6 +29,20 @@ function Home() {
     const modes = ["general", "hobby", "professional", "event"];
 
     useEffect(() => {
+  axios
+    .get(`${import.meta.env.VITE_BACKEND_URL}/auth/debug`, {
+      withCredentials: true,
+    })
+    .then((res) => {
+      console.log("Debug response:", res.data);
+    })
+    .catch((err) => {
+      console.error("Auth Debug Error:", err);
+    });
+}, []);
+
+
+    useEffect(() => {
         if (!selectedMode) {
             dispatch(setMode("general"));
         }
