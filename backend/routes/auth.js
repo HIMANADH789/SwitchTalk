@@ -13,7 +13,7 @@ router.post("/login", passport.authenticate("local"), (req, res) => {
     console.log("SESSION SAVED:", req.session);
 });
 
-app.get("/debug", (req, res) => {
+router.get("/debug", (req, res) => {
   res.json({
     isAuthenticated: req.isAuthenticated?.() || false,
     user: req.user || null,
