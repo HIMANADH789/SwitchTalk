@@ -23,20 +23,11 @@ connectDB();
 
 const CLIENT_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
-const allowedOrigins = [
-  'https://switch-talk.vercel.app',
-  'http://localhost:5173'
-];
+
 
 // Allow dynamic Vercel preview URLs
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
-      return callback(null, true);
-    }
-    return callback(new Error('Not allowed by CORS'));
-  },
+  origin: true,
   credentials: true
 }));
 
