@@ -73,6 +73,11 @@ function isAuthenticated(req, res, next) {
     return req.isAuthenticated() ? next() : res.status(401).json({ message: "Not authenticated" });
 }
 
+app.use((req, res, next) => {
+  console.log("🍪 Cookie:", req.headers.cookie);
+  next();
+});
+
 app.use('/auth', authRoutes);
 app.use('/chat', isAuthenticated, chatRoutes);
 app.use('/group', isAuthenticated, groupRoutes);
