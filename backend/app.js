@@ -18,89 +18,87 @@ const { setupWebSocket } = require('./utils/websocket');
 const app = express();
 const server = http.createServer(app);
 
-// Connect to MongoDB
 connectDB();
 
-const CLIENT_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
-const MONGO_URI = process.env.MONGO_URI || 'your-mongo-connection-string';
 
-// ✅ CORS for cross-origin cookies (must be before session)
+const CLIENT_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+
+
+
+// Allow dynamic Vercel preview URLs
 app.use(cors({
-  origin: true,            // Automatically reflects the request origin
-  credentials: true        // Allows cookies to be sent cross-origin
+  origin: true,
+  credentials: true
 }));
+
 
 app.use(express.json());
 
-// ✅ MongoDB session store setup
+const db= "mongodb+srv://himanadhkondabathini:Himanadh%401234@cluster0.y77ij.mongodb.net/chat?retryWrites=true&w=majority&appName=Cluster0"
 const sessionStore = MongoStore.create({
-  mongoUrl: MONGO_URI,
-  collectionName: 'sessions',
-  ttl: 24 * 60 * 60, // 1 day
+    mongoUrl: db,
+    collectionName: 'sessions',
+    ttl: 24 * 60 * 60,
 });
 
 app.use(session({
-  store: sessionStore,
-  secret: process.env.SESSION_SECRET || 'fallback-secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 24, // 1 day
+    store: sessionStore,
+    secret: 'fallback-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+    maxAge: 1000 * 60 * 60 * 24,
     httpOnly: true,
-    sameSite: 'none',  // Required for cookies to work cross-origin
-    secure: true       // Required for HTTPS (Render must use HTTPS)
-  }
+    sameSite: 'none', 
+    secure: true     
+}
+
 }));
 
-// ✅ Passport setup
 app.use(passport.initialize());
 app.use(passport.session());
 
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser((user, done) => done(null, user._id.toString()));
 passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await User.findById(id);
-    done(null, user);
-  } catch (err) {
-    done(err, null);
-  }
+    try {
+        const user = await User.findById(id);
+        done(null, user);
+    } catch (err) {
+        done(err, null);
+    }
 });
 
-// ✅ Middleware to protect routes
 function isAuthenticated(req, res, next) {
-  return req.isAuthenticated() ? next() : res.status(401).json({ message: "Not authenticated" });
+    return req.isAuthenticated() ? next() : res.status(401).json({ message: "Not authenticated" });
 }
 
-// ✅ Routes
 app.use('/auth', authRoutes);
 app.use('/chat', isAuthenticated, chatRoutes);
 app.use('/group', isAuthenticated, groupRoutes);
 app.use('/post', isAuthenticated, postRoutes);
 app.use('/room', isAuthenticated, roomRoutes);
 
-// ✅ WebSocket Setup
 setupWebSocket(server);
 
-// ✅ Error handler
+    
+
 app.use((err, req, res, next) => {
-  res.status(500).json({
-    message: "Internal server error",
-    error: process.env.NODE_ENV !== 'production' ? err.message : undefined
-  });
+    res.status(500).json({
+        message: "Internal server error",
+        error: !isProduction ? err.message : undefined
+    });
 });
 
-// ✅ Start server
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+    console.log(Server is running on port ${PORT});
 });
 
-// ✅ Graceful shutdown
 process.on('SIGTERM', () => {
-  console.log('Shutting down gracefully...');
-  server.close(() => {
-    console.log('Server closed');
-    process.exit(0);
-  });
+    console.log('Shutting down gracefully...');
+    server.close(() => {
+        console.log('Server closed');
+        process.exit(0);
+    });
 });
