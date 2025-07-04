@@ -47,10 +47,12 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 1000 * 60 * 60 * 24,
-        httpOnly: true,
-        sameSite: 'Lax'
-    }
+    maxAge: 1000 * 60 * 60 * 24,
+    httpOnly: true,
+    sameSite: 'none', 
+    secure: true     
+}
+
 }));
 
 app.use(passport.initialize());
