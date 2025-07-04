@@ -3,6 +3,7 @@ const express = require('express');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const http = require('http');
 const cors = require('cors');
 const connectDB = require('./database');
@@ -17,28 +18,37 @@ const { setupWebSocket } = require('./utils/websocket');
 const app = express();
 const server = http.createServer(app);
 
+// Connect to MongoDB
 connectDB();
 
 const CLIENT_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+const MONGO_URI = process.env.MONGO_URI || 'your-mongo-connection-string';
 
-// ✅ CORS for cross-origin cookies
+// ✅ CORS for cross-origin cookies (must be before session)
 app.use(cors({
-  origin: true,
-  credentials: true
+  origin: true,            // Automatically reflects the request origin
+  credentials: true        // Allows cookies to be sent cross-origin
 }));
 
 app.use(express.json());
 
-// ✅ In-memory session (default store)
+// ✅ MongoDB session store setup
+const sessionStore = MongoStore.create({
+  mongoUrl: MONGO_URI,
+  collectionName: 'sessions',
+  ttl: 24 * 60 * 60, // 1 day
+});
+
 app.use(session({
-  secret: 'fallback-secret',
+  store: sessionStore,
+  secret: process.env.SESSION_SECRET || 'fallback-secret',
   resave: false,
   saveUninitialized: false,
   cookie: {
     maxAge: 1000 * 60 * 60 * 24, // 1 day
     httpOnly: true,
-    sameSite: 'none',  // Required for cross-origin cookies
-    secure: true       // Required for HTTPS
+    sameSite: 'none',  // Required for cookies to work cross-origin
+    secure: true       // Required for HTTPS (Render must use HTTPS)
   }
 }));
 
@@ -69,9 +79,10 @@ app.use('/group', isAuthenticated, groupRoutes);
 app.use('/post', isAuthenticated, postRoutes);
 app.use('/room', isAuthenticated, roomRoutes);
 
+// ✅ WebSocket Setup
 setupWebSocket(server);
 
-// ✅ Global error handler
+// ✅ Error handler
 app.use((err, req, res, next) => {
   res.status(500).json({
     message: "Internal server error",
@@ -79,11 +90,13 @@ app.use((err, req, res, next) => {
   });
 });
 
+// ✅ Start server
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
+// ✅ Graceful shutdown
 process.on('SIGTERM', () => {
   console.log('Shutting down gracefully...');
   server.close(() => {
