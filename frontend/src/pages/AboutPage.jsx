@@ -8,12 +8,14 @@ function AboutPage() {
   const friendId = useSelector((state) => state.mode.friendId);
   const groupId = useSelector((state) => state.mode.groupId);
   const id = friendId==null?groupId:friendId;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
   console.log(id);
 
   useEffect(() => {
     async function fetchDetails() {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/chat/about`, {
+        const res = await axios.get(`${backendUrl}/chat/about`, {
           params: { id },
           withCredentials: true,
         });
