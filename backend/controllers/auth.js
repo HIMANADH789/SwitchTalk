@@ -42,21 +42,32 @@ async function getChatList(userId, activeMode) {
 
 
 
-const registerUser= async (req, res) => {
-    try {
-        const { username,name, email, password } = req.body;
-        const newUser = new User({ username,name, email });
+// controllers/auth.js
+const registerUser = async (req, res, next) => {
+  try {
+    const { username, name, email, password } = req.body;
 
-    
-        User.register(newUser, password, (err, user) => {
-            if (err) return res.status(400).json({ error: err.message });
+    const newUser = new User({ username, name, email });
+    User.register(newUser, password, (err, user) => {
+      if (err) {
+        return res.status(400).json({ error: err.message });
+      }
 
-            
+      // ✅ Automatically log the user in after successful registration
+      req.login(user, (loginErr) => {
+        if (loginErr) return next(loginErr);
+
+        res.status(201).json({
+          message: "Registration successful!",
+          user: { id: user._id, username: user.username, name: user.name, email: user.email },
         });
-    } catch (error) {
-        res.status(500).json({ error: "Server error!" });
-    }
-}
+      });
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Server error!" });
+  }
+};
+
 
 const logoutUser= async(req, res) => {
     req.logout((err) => {
@@ -300,8 +311,8 @@ const searchGroupRequest= async(req,res,next)=>{
         }else{
             status='none'
         }
-
-        res.json({searched:findUser[0],status});
+        console.log("found user:",findUser);
+        res.json({searched:findUser,status});
         console.log(status);
    
 

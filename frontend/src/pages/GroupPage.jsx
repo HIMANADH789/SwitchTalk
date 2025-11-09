@@ -15,7 +15,7 @@ const socket = io(import.meta.env.VITE_BACKEND_URL, {
 function GroupPage() {
     const dispatch = useDispatch();
     const groupId = useSelector((state) => state.mode.groupId);
-    console.log(groupId);
+    console.log("groupId",groupId);
     const mode = useSelector((state) => state.mode.selectedMode);
     
     const [messages, setMessages] = useState([]);
@@ -91,9 +91,10 @@ function GroupPage() {
                     {group ? group.name : "Loading..."}
                 </Typography>
                 <div style={{ display: "flex", gap: "10px" }}>
-                    <Link to="/search-group-request" style={{ textDecoration: "none" }}>
-                        <Button variant="text">🔍</Button>
-                    </Link>
+                    <Link to="/search-group-request" state={{ groupId }} style={{ textDecoration: "none" }}>
+  <Button variant="text">🔍</Button>
+</Link>
+
                     {isAdmin && (
                         <Link to="/create-post" onClick={() => dispatch(setType("group"))} style={{ textDecoration: "none" }}>
                             <Button variant="text">➕</Button>
